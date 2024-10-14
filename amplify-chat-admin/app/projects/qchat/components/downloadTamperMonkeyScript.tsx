@@ -4,9 +4,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
-import Link from "next/link";
 
 export default async function DownloadTamperMonekyScript({
   domainName,
@@ -35,9 +33,13 @@ export default async function DownloadTamperMonekyScript({
         // Create iframe to embed the chatbot
         var iframe = document.createElement('iframe');
         iframe.setAttribute('id', 'chatbot-iframe');
+        iframe.style.position = 'fixed';
+        iframe.style.top = '0';
+        iframe.style.left = '0';
         iframe.style.width = '100%';
         iframe.style.height = '100%';
         iframe.style.border = 'none';
+        iframe.style.zIndex = '9999'; // Ensure the iframe is above other elements
         iframe.src = '##URL##';
         document.body.appendChild(iframe);
     })();`;
