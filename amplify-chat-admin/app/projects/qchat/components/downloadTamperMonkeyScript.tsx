@@ -31,12 +31,15 @@ export default async function DownloadTamperMonekyScript({
 
     (function() {
         'use strict';
-
-        // Your code here...
-        var my_awesome_script = document.createElement('script');
-        my_awesome_script.setAttribute("id", "QChatparams")
-        my_awesome_script.setAttribute('src','##URL##')
-        document.head.appendChild(my_awesome_script);
+        
+        // Create iframe to embed the chatbot
+        var iframe = document.createElement('iframe');
+        iframe.setAttribute('id', 'chatbot-iframe');
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
+        iframe.src = '##URL##';
+        document.body.appendChild(iframe);
     })();`;
 
   const downloadScript = async () => {
@@ -44,7 +47,7 @@ export default async function DownloadTamperMonekyScript({
 
     if (urlWithToken == "") return null;
 
-    //Replace string ##URL## with urlWithToken in scriptContent
+    // Replace ##URL## with the actual URL including the token
     const scriptContentWithToken = scriptContent.replace(
       "##URL##",
       urlWithToken
@@ -53,7 +56,6 @@ export default async function DownloadTamperMonekyScript({
       type: "text/javascript",
     });
     const url = URL.createObjectURL(blob);
-    //return url;
     const a = document.createElement("a");
     a.href = url;
     a.download = `qchat-script-${customerName}.user.js`;
@@ -77,6 +79,7 @@ export default async function DownloadTamperMonekyScript({
     </TooltipProvider>
   );
 }
+
 async function getRedirectUrl(url) {
   try {
     const response = await fetch(url + "&redirectUrl=true", {
@@ -93,8 +96,7 @@ async function getRedirectUrl(url) {
 }
 
 function formatURL(url) {
-  //Retrieve the URL hostname, queryparams and add serve.js as path before '?'
+  // Remove 'serve.js' since we're embedding directly via iframe
   const parsedUrl = new URL(url);
-  const formattedUrl = `${parsedUrl.origin}${parsedUrl.pathname}serve.js${parsedUrl.search}`;
-  return formattedUrl;
+  return `${parsedUrl.origin}${parsedUrl.pathname}${parsedUrl.search}`;
 }
